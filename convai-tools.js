@@ -52,22 +52,27 @@ function injectElevenLabsWidget() {
       redirectToExternalURL: ({ url }) => {
         console.log('redirectToExternalURL called with url:', url);
         
-        // Build full URL - handles any base URL
-        let fullUrl = url;
-        if (!url.startsWith('http')) {
-          // Use custom base URL if provided, otherwise auto-detect
-          const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-          fullUrl = baseUrl + (url.startsWith('/') ? '' : '/') + url;
-        }
-        
-        console.log('Navigating to:', fullUrl);
-        
-        // Navigate based on config
-        if (OPEN_IN_NEW_TAB) {
-          window.open(fullUrl, '_blank', 'noopener,noreferrer');
-        } else {
-          window.location.href = fullUrl;
-        }
+        redirectToExternalURL: ({ url }) => {
+  console.log('redirectToExternalURL called with url:', url);
+
+  // Build full URL
+  let fullUrl = url;
+  if (!url.startsWith('http')) {
+    const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+    fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+  }
+
+  console.log('Navigating to:', fullUrl);
+
+  // SAFARI-FRIENDLY NAVIGATION
+  const link = document.createElement('a');
+  link.href = fullUrl;
+  link.target = OPEN_IN_NEW_TAB ? '_blank' : '_self';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link); // cleanup
+}
       },
     };
   });
