@@ -63,10 +63,9 @@ function injectElevenLabsWidget() {
         console.log('Navigating to:', fullUrl);
         
         // Navigate based on config
-        if (OPEN_IN_NEW_TAB) {
-          window.open(fullUrl, '_blank', 'noopener,noreferrer');
-        } else {
-          window.location.href = fullUrl;
+        setTimeout(() => {
+  window.location.href = fullUrl;
+}, 1500); // Optional delay so user hears the agent first
         }
       },
     };
