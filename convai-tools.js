@@ -39,7 +39,7 @@ function injectElevenLabsWidget() {
 
   // Create wrapper and widget
   const wrapper = document.createElement('div');
-  wrapper.className = convai-widget ${WIDGET_POSITION};
+  wrapper.className = `convai-widget ${WIDGET_POSITION}`;
 
   const widget = document.createElement('elevenlabs-convai');
   widget.id = ID;
@@ -57,7 +57,7 @@ function injectElevenLabsWidget() {
         if (!url.startsWith('http')) {
           // Use custom base URL if provided, otherwise auto-detect
           const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-          fullUrl = baseUrl + (url.startsWith('/') ? '' : '/'} + url;
+          fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
         }
         
         console.log('Navigating to:', fullUrl);
