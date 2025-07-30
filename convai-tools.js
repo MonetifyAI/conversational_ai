@@ -1,70 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Voice Agent Widget</title>
-</head>
-<body style="margin:0; padding:0;">
-  <script>
-    const AGENT_ID = 'agent_6401k0yatsegeg6t8ck9mkhpgazv';
-    const BASE_URL = 'https://midwifems.com';
-    const WIDGET_POSITION = 'bottom-right';
-    const OPEN_IN_NEW_TAB = false;
+// ============================================================================
+// ELEVENLABS CONVAI WIDGET SETUP
+// ============================================================================
+// 
+// CHANGE THESE VALUES FOR YOUR SITE:
+// ============================================================================
 
-    function injectElevenLabsWidget() {
-      const ID = 'elevenlabs-convai-widget';
-      if (document.getElementById(ID)) return;
+// REQUIRED: Replace with your ElevenLabs agent ID
+const AGENT_ID = 'agent_6401k0yatsegeg6t8ck9mkhpgazv';
 
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
-      script.async = true;
-      script.type = 'text/javascript';
-      document.head.appendChild(script);
+// OPTIONAL: Change navigation behavior
+const OPEN_IN_NEW_TAB = true; // true = new tab, false = same tab
 
-      const wrapper = document.createElement('div');
-      wrapper.className = convai-widget ${WIDGET_POSITION};
+// OPTIONAL: Change widget position
+const WIDGET_POSITION = 'bottom-right'; // 'bottom-right', 'bottom-left', 'top-right', 'top-left'
 
-      const widget = document.createElement('elevenlabs-convai');
-      widget.id = ID;
-      widget.setAttribute('agent-id', AGENT_ID);
-      widget.setAttribute('variant', 'full');
+// OPTIONAL: Base URL for navigation (leave empty for auto-detection)
+const BASE_URL = 'https://midwifems.com'; // e.g., 'https://mysite.framer.app' or 'https://mysite.wixsite.com/mysite'
 
-      widget.addEventListener('elevenlabs-convai:call', (event) => {
-        event.detail.config.clientTools = {
-          redirectToExternalURL: ({ url }) => {
-            let fullUrl = url;
-            if (!url.startsWith('http')) {
-              const baseUrl = BASE_URL;
-              fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
-            }
-            if (OPEN_IN_NEW_TAB) {
-              window.open(fullUrl, '_blank', 'noopener,noreferrer');
-            } else {
-              window.location.href = fullUrl;
-            }
-          }
-        };
-      });
+// ============================================================================
+// DON'T CHANGE ANYTHING BELOW THIS LINE
+// ============================================================================
 
-      wrapper.appendChild(widget);
-      document.body.appendChild(wrapper);
-    }
+// Create and inject the widget with client tools
+function injectElevenLabsWidget() {
+  const ID = 'elevenlabs-convai-widget';
+  
+  // Check if the widget is already loaded
+  if (document.getElementById(ID)) {
+    return;
+  }
 
-    // Manual fallback for tool call
-    window.addEventListener('message', function (e) {
-      const data = e.data;
-      if (data?.type === 'tool_call' && data?.name === 'redirectToExternalURL') {
-        const targetUrl = ${BASE_URL}${data.parameters?.url || '/'};
-        console.log('[Global Listener] Redirecting to:', targetUrl);
-        window.location.href = targetUrl;
-      }
-    });
+  // Create widget script
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+  script.async = true;
+  script.type = 'text/javascript';
+  document.head.appendChild(script);
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', injectElevenLabsWidget);
-    } else {
-      injectElevenLabsWidget();
-    }
-  </script>
-</body>
-</html>
+  // Create wrapper and widget
+  const wrapper = document.createElement('div');
+  wrapper.className = `convai-widget ${WIDGET_POSITION}`;
+
+  const widget = document.createElement('elevenlabs-convai');
+  widget.id = ID;
+  widget.setAttribute('agent-id', AGENT_ID);
+  widget.setAttribute('variant', 'full');
+
+  // Listen for the widget's "call" event to inject client tools
+  widget.addEventListener('elevenlabs-convai:call', (event) => {
+    event.detail.config.clientTools = {
+      redirectToExternalURL: ({ url }) => {
+        console.log('redirectToExternalURL called with url:', url);
+        
+        // Build full URL - handles any base URL
+        let fullUrl = url;
+        if (!url.startsWith('http')) {
+          // Use custom base URL if provided, otherwise auto-detect
+          const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+          fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+        }
+        
+        console.log('Navigating to:', fullUrl);
+        
+        // Navigate based on config
+        if (OPEN_IN_NEW_TAB) {
+          window.open(fullUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          window.location.href = fullUrl;
+        }
+      },
+    };
+  });
+
+  // Attach widget to the DOM
+  wrapper.appendChild(widget);
+  document.body.appendChild(wrapper);
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectElevenLabsWidget);
+} else {
+  injectElevenLabsWidget();
+}
