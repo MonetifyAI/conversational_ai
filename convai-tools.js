@@ -57,7 +57,7 @@ function injectElevenLabsWidget() {
         if (!url.startsWith('http')) {
           // Use custom base URL if provided, otherwise auto-detect
           const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-          fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+          fullUrl = baseUrl + (url.startsWith('/') ? '' : '/') + url;
         }
         
         console.log('Navigating to:', fullUrl);
