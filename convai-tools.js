@@ -52,9 +52,6 @@ function injectElevenLabsWidget() {
       redirectToExternalURL: ({ url }) => {
         console.log('redirectToExternalURL called with url:', url);
         
-        redirectToExternalURL: ({ url }) => {
-  console.log('redirectToExternalURL called with url:', url);
-
   // Build full URL
   let fullUrl = url;
   if (!url.startsWith('http')) {
