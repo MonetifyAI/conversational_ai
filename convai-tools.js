@@ -54,7 +54,7 @@ function injectElevenLabsWidget() {
     let fullUrl = url;
     if (!url.startsWith('http')) {
       const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-      fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+      fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     }
 
     console.log('Navigating to:', fullUrl);
