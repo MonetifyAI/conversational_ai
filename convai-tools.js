@@ -24,68 +24,50 @@ const BASE_URL = 'https://midwifems.com'; // e.g., 'https://mysite.framer.app' o
 // Create and inject the widget with client tools
 function injectElevenLabsWidget() {
   const ID = 'elevenlabs-convai-widget';
-  
-  // Check if the widget is already loaded
-  if (document.getElementById(ID)) {
-    return;
-  }
+  if (document.getElementById(ID)) return;
 
-  // Create widget script
   const script = document.createElement('script');
   script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
   script.async = true;
   script.type = 'text/javascript';
+
+  script.onload = () => {
+    // Create wrapper and widget after script loads
+    const wrapper = document.createElement('div');
+    wrapper.className = convai-widget ${WIDGET_POSITION};
+
+    const widget = document.createElement('elevenlabs-convai');
+    widget.id = ID;
+    widget.setAttribute('agent-id', AGENT_ID);
+    widget.setAttribute('variant', 'full');
+
+    widget.addEventListener('elevenlabs-convai:call', (event) => {
+      event.detail.config.clientTools = {
+        redirectToExternalURL: ({ url }) => {
+          console.log('redirectToExternalURL called with url:', url);
+          let fullUrl = url;
+
+          if (!url.startsWith('http')) {
+            const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+            fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+          }
+
+          console.log('Navigating to:', fullUrl);
+
+          const link = document.createElement('a');
+          link.href = fullUrl;
+          link.target = OPEN_IN_NEW_TAB ? '_blank' : '_self';
+          link.rel = 'noopener noreferrer';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        },
+      };
+    });
+
+    wrapper.appendChild(widget);
+    document.body.appendChild(wrapper);
+  };
+
   document.head.appendChild(script);
-
-  // Create wrapper and widget
-  const wrapper = document.createElement('div');
-  wrapper.className = `convai-widget ${WIDGET_POSITION}`;
-
-  const widget = document.createElement('elevenlabs-convai');
-  widget.id = ID;
-  widget.setAttribute('agent-id', AGENT_ID);
-  widget.setAttribute('variant', 'full');
-
-  // Listen for the widget's "call" event to inject client tools
-  widget.addEventListener('elevenlabs-convai:call', (event) => {
-    event.detail.config.clientTools = {
-      redirectToExternalURL: ({ url }) => {
-        console.log('redirectToExternalURL called with url:', url);
-        
-        // Build full URL - handles any base URL
-        let fullUrl = url;
-        if (!url.startsWith('http')) {
-          // Use custom base URL if provided, otherwise auto-detect
-          const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-          fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
-        }
-
-    console.log('Navigating to:', fullUrl);
-
-    // SAFARI-FRIENDLY NAVIGATION
-    const link = document.createElement('a');
-    link.href = fullUrl;
-    link.target = OPEN_IN_NEW_TAB ? '_blank' : '_self';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link); // cleanup
-  }
-};
-
-  // Attach widget to the DOM
-  wrapper.appendChild(widget);
-  document.body.appendChild(wrapper);
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectElevenLabsWidget);
-} else {
-  injectElevenLabsWidget();
-}
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectElevenLabsWidget);
-} else {
-  injectElevenLabsWidget();
 }
