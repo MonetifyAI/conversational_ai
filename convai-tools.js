@@ -39,7 +39,7 @@ function injectElevenLabsWidget() {
 
   // Create wrapper and widget
   const wrapper = document.createElement('div');
-  wrapper.className = convai-widget ${WIDGET_POSITION};
+  wrapper.className = `convai-widget ${WIDGET_POSITION}`;
 
   const widget = document.createElement('elevenlabs-convai');
   widget.id = ID;
