@@ -46,33 +46,29 @@ function injectElevenLabsWidget() {
   widget.setAttribute('agent-id', AGENT_ID);
   widget.setAttribute('variant', 'full');
 
-  // Listen for the widget's "call" event to inject client tools
-  widget.addEventListener('elevenlabs-convai:call', (event) => {
-    event.detail.config.clientTools = {
-      redirectToExternalURL: ({ url }) => {
-        console.log('redirectToExternalURL called with url:', url);
-        
-  // Build full URL
-  let fullUrl = url;
-  if (!url.startsWith('http')) {
-    const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-    fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+ event.detail.config.clientTools = {
+  redirectToExternalURL: function ({ url }) {
+    console.log('redirectToExternalURL called with url:', url);
+
+    // Build full URL - handles any base URL
+    let fullUrl = url;
+    if (!url.startsWith('http')) {
+      const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+      fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
+    }
+
+    console.log('Navigating to:', fullUrl);
+
+    // SAFARI-FRIENDLY NAVIGATION
+    const link = document.createElement('a');
+    link.href = fullUrl;
+    link.target = OPEN_IN_NEW_TAB ? '_blank' : '_self';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link); // cleanup
   }
-
-  console.log('Navigating to:', fullUrl);
-
-  // SAFARI-FRIENDLY NAVIGATION
-  const link = document.createElement('a');
-  link.href = fullUrl;
-  link.target = OPEN_IN_NEW_TAB ? '_blank' : '_self';
-  link.rel = 'noopener noreferrer';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link); // cleanup
-}
-      },
-    };
-  });
+};
 
   // Attach widget to the DOM
   wrapper.appendChild(widget);
