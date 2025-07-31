@@ -71,7 +71,7 @@ window.addEventListener('message', function (e) {
   const data = e.data;
   if (data?.type === 'tool_call' && data?.name === 'redirectToExternalURL') {
     const base = BASE_URL || window.location.origin;
-    const targetUrl = ${base}${data.parameters?.url || '/'};
+    const targetUrl = `${base}${data.parameters?.url || '/'}`;
     console.log('[Fallback] Redirecting to:', targetUrl);
     window.location.href = targetUrl;
   }
