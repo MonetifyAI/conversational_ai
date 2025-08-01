@@ -35,8 +35,7 @@ function injectElevenLabsWidget() {
   widget.addEventListener('elevenlabs-convai:call', (event) => {
     event.detail.config.clientTools = {
       redirectToExternalURL: ({ url }) => redirect(url),
-      redirectToHealthForm: ({ url }) => redirect(url),
-      redirectToBooking: ({ url }) => redirect(url)
+      redirectToExternalURLHealth: ({ url }) => redirect(url)
       // Add more tools here as needed
     };
   });
