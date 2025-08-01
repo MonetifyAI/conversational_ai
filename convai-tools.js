@@ -1,29 +1,21 @@
 // ============================================================================
-// ELEVENLABS CONVAI WIDGET SETUP
-// ============================================================================
-// 
-// CHANGE THESE VALUES FOR YOUR SITE:
+// ELEVENLABS CONVAI WIDGET SETUP (MODULAR VERSION)
 // ============================================================================
 
 // REQUIRED: Replace with your ElevenLabs agent ID
 const AGENT_ID = 'agent_6401k0yatsegeg6t8ck9mkhpgazv';
 
-// OPTIONAL: Change navigation behavior
-const OPEN_IN_NEW_TAB = true; // true = new tab, false = same tab
-
-// OPTIONAL: Change widget position
-const WIDGET_POSITION = 'bottom-right'; // 'bottom-right', 'bottom-left', 'top-right', 'top-left'
-
-// OPTIONAL: Base URL for navigation (leave empty for auto-detection)
-const BASE_URL = 'https://midwifems.com'; // e.g., 'https://mysite.framer.app' or 'https://mysite.wixsite.com/mysite'
+// OPTIONAL SETTINGS
+const OPEN_IN_NEW_TAB = true;
+const WIDGET_POSITION = 'bottom-right';
+const BASE_URL = 'https://midwifems.com';
 
 // ============================================================================
-// DON'T CHANGE ANYTHING BELOW THIS LINE
+// DON'T CHANGE BELOW THIS LINE
 // ============================================================================
 
 function injectElevenLabsWidget() {
   const ID = 'elevenlabs-convai-widget';
-
   if (document.getElementById(ID)) return;
 
   const script = document.createElement('script');
@@ -42,23 +34,10 @@ function injectElevenLabsWidget() {
 
   widget.addEventListener('elevenlabs-convai:call', (event) => {
     event.detail.config.clientTools = {
-      redirectToExternalURL: ({ url }) => {
-        console.log('redirectToExternalURL called with url:', url);
-
-        let fullUrl = url;
-        if (!url.startsWith('http')) {
-          const baseUrl = BASE_URL || window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-          fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
-        }
-
-        console.log('Navigating to:', fullUrl);
-
-        if (OPEN_IN_NEW_TAB) {
-          window.open(fullUrl, '_blank', 'noopener,noreferrer');
-        } else {
-          window.location.href = fullUrl;
-        }
-      }
+      redirectToExternalURL: ({ url }) => redirect(url),
+      redirectToHealthForm: ({ url }) => redirect(url),
+      redirectToBooking: ({ url }) => redirect(url)
+      // Add more tools here as needed
     };
   });
 
@@ -66,10 +45,25 @@ function injectElevenLabsWidget() {
   document.body.appendChild(wrapper);
 }
 
-// Global fallback listener for manual tool_call tests
+function redirect(url) {
+  let fullUrl = url;
+  if (!url.startsWith('http')) {
+    const baseUrl = BASE_URL || window.location.origin;
+    fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+
+  console.log('Navigating to:', fullUrl);
+  if (OPEN_IN_NEW_TAB) {
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  } else {
+    window.location.href = fullUrl;
+  }
+}
+
+// Fallback for manual tool_call tests (outside widget)
 window.addEventListener('message', function (e) {
   const data = e.data;
-  if (data?.type === 'tool_call' && data?.name === 'redirectToExternalURL') {
+  if (data?.type === 'tool_call') {
     const base = BASE_URL || window.location.origin;
     const targetUrl = `${base}${data.parameters?.url || '/'}`;
     console.log('[Fallback] Redirecting to:', targetUrl);
