@@ -24,16 +24,16 @@ script.async = true;
 script.type = 'text/javascript';
 document.head.appendChild(script);
 
-const wrapper = document.createElement(‘div’);
+const wrapper = document.createElement('div');
 wrapper.className = `convai-widget ${WIDGET_POSITION}`;
 
-const widget = document.createElement(‘elevenlabs-convai’);
+const widget = document.createElement('elevenlabs-convai');
 widget.id = ID;
 widget.setAttribute(‘agent-id’, AGENT_ID);
 widget.setAttribute(‘variant’, ‘full’);
 
 // ONLY CHANGE: Use document instead of widget for addEventListener
-document.addEventListener(‘elevenlabs-convai:call’, (event) => {
+document.addEventListener('elevenlabs-convai:call', (event) => {
 event.detail.config.clientTools = {
 redirectToExternalURL: ({ url }) => redirect(url),
 redirectToExternalURLHealth: ({ url }) => redirect(url)
@@ -61,9 +61,9 @@ window.location.href = fullUrl;
 }
 
 // Fallback for manual tool_call tests (outside widget)
-window.addEventListener(‘message’, function (e) {
+window.addEventListener('message', function (e) {
 const data = e.data;
-if (data?.type === ‘tool_call’) {
+if (data?.type === 'tool_call') {
 const base = BASE_URL || window.location.origin;
 const targetUrl = `${base}${data.parameters?.url || '/'}`;
 console.log(’[Fallback] Redirecting to:’, targetUrl);
@@ -72,7 +72,7 @@ window.location.href = targetUrl;
 });
 
 if (document.readyState === 'loading') {
-document.addEventListener(‘DOMContentLoaded’, injectElevenLabsWidget);
+document.addEventListener('DOMContentLoaded', injectElevenLabsWidget);
 } else {
 injectElevenLabsWidget();
 }
