@@ -1,16 +1,18 @@
 // ============================================================================
+// 🔒 Fix: Lock RTCPeerConnection.prototype to prevent illegal overrides
+// ============================================================================
+if (typeof RTCPeerConnection !== 'undefined' && RTCPeerConnection.prototype) {
+  try {
+    Object.freeze(RTCPeerConnection.prototype);
+    console.log('RTCPeerConnection.prototype has been frozen to prevent overrides.');
+  } catch (err) {
+    console.warn('Failed to freeze RTCPeerConnection.prototype:', err);
+  }
+}
+
+// ============================================================================
 // ELEVENLABS CONVAI WIDGET SETUP (MODULAR VERSION)
 // ============================================================================
-
-// PATCH: Prevent browser crash due to read-only error on RTCPeerConnection
-try {
-  Object.defineProperty(RTCPeerConnection.prototype, 'addEventListener', {
-    writable: false,
-    configurable: false
-  });
-} catch (e) {
-  console.warn('RTCPeerConnection.addEventListener is already locked.');
-}
 
 // REQUIRED: Replace with your ElevenLabs agent ID
 const AGENT_ID = 'agent_6401k0yatsegeg6t8ck9mkhpgazv';
