@@ -29,8 +29,8 @@ wrapper.className = `convai-widget ${WIDGET_POSITION}`;
 
 const widget = document.createElement('elevenlabs-convai');
 widget.id = ID;
-widget.setAttribute(‘agent-id’, AGENT_ID);
-widget.setAttribute(‘variant’, ‘full’);
+widget.setAttribute('agent-id', AGENT_ID);
+widget.setAttribute('variant', 'full');
 
 // ONLY CHANGE: Use document instead of widget for addEventListener
 document.addEventListener('elevenlabs-convai:call', (event) => {
