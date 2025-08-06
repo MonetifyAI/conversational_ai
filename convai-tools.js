@@ -18,10 +18,10 @@ function injectElevenLabsWidget() {
 const ID = 'elevenlabs-convai-widget';
 if (document.getElementById(ID)) return;
 
-const script = document.createElement(‘script’);
-script.src = ‘https://unpkg.com/@elevenlabs/convai-widget-embed’;
+const script = document.createElement('script');
+script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
 script.async = true;
-script.type = ‘text/javascript’;
+script.type = 'text/javascript';
 document.head.appendChild(script);
 
 const wrapper = document.createElement(‘div’);
@@ -71,7 +71,7 @@ window.location.href = targetUrl;
 }
 });
 
-if (document.readyState === ‘loading’) {
+if (document.readyState === 'loading') {
 document.addEventListener(‘DOMContentLoaded’, injectElevenLabsWidget);
 } else {
 injectElevenLabsWidget();
