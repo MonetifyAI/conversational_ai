@@ -1,16 +1,4 @@
 // ============================================================================
-// 🔒 Fix: Lock RTCPeerConnection.prototype to prevent illegal overrides
-// ============================================================================
-if (typeof RTCPeerConnection !== 'undefined' && RTCPeerConnection.prototype) {
-  try {
-    Object.freeze(RTCPeerConnection.prototype);
-    console.log('RTCPeerConnection.prototype has been frozen to prevent overrides.');
-  } catch (err) {
-    console.warn('Failed to freeze RTCPeerConnection.prototype:', err);
-  }
-}
-
-// ============================================================================
 // ELEVENLABS CONVAI WIDGET SETUP (MODULAR VERSION)
 // ============================================================================
 
@@ -37,7 +25,7 @@ function injectElevenLabsWidget() {
   document.head.appendChild(script);
 
   const wrapper = document.createElement('div');
-  wrapper.className = `convai-widget ${WIDGET_POSITION}`;
+  wrapper.className = convai-widget ${WIDGET_POSITION};
 
   const widget = document.createElement('elevenlabs-convai');
   widget.id = ID;
@@ -60,7 +48,7 @@ function redirect(url) {
   let fullUrl = url;
   if (!url.startsWith('http')) {
     const baseUrl = BASE_URL || window.location.origin;
-    fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+    fullUrl = ${baseUrl}${url.startsWith('/') ? '' : '/'}${url};
   }
 
   console.log('Navigating to:', fullUrl);
@@ -76,7 +64,7 @@ window.addEventListener('message', function (e) {
   const data = e.data;
   if (data?.type === 'tool_call') {
     const base = BASE_URL || window.location.origin;
-    const targetUrl = `${base}${data.parameters?.url || '/'}`;
+    const targetUrl = ${base}${data.parameters?.url || '/'};
     console.log('[Fallback] Redirecting to:', targetUrl);
     window.location.href = targetUrl;
   }
