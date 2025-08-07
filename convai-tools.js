@@ -47,14 +47,14 @@ document.body.appendChild(wrapper);
 
 function redirect(url) {
 let fullUrl = url;
-if (!url.startsWith(‘http’)) {
+if (!url.startsWith('http')) {
 const baseUrl = BASE_URL || window.location.origin;
 fullUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
-console.log(‘Navigating to:’, fullUrl);
+console.log('Navigating to:', fullUrl);
 if (OPEN_IN_NEW_TAB) {
-window.open(fullUrl, ‘_blank’, ‘noopener,noreferrer’);
+window.open(fullUrl, '_blank', 'noopener,noreferrer');
 } else {
 window.location.href = fullUrl;
 }
@@ -66,7 +66,7 @@ const data = e.data;
 if (data?.type === 'tool_call') {
 const base = BASE_URL || window.location.origin;
 const targetUrl = `${base}${data.parameters?.url || '/'}`;
-console.log(’[Fallback] Redirecting to:’, targetUrl);
+console.log('[Fallback] Redirecting to:', targetUrl);
 window.location.href = targetUrl;
 }
 });
