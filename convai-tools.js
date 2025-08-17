@@ -6,7 +6,7 @@
 const AGENT_ID = 'agent_6401k0yatsegeg6t8ck9mkhpgazv';
 
 // OPTIONAL SETTINGS
-const OPEN_IN_NEW_TAB = true;
+const OPEN_IN_NEW_TAB = false;
 const WIDGET_POSITION = 'bottom-right';
 const BASE_URL = 'https://midwifems.com';
 
